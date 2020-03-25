@@ -99,6 +99,19 @@ p {
   text-align: center;
 }
 
+.section {
+  padding-top: 120px;
+  padding-bottom: 130px;
+}
+
+.darker-section {
+  background-color: #f4f6f7;
+}
+
+.lighter-section {
+  background-color: #ffffff;
+}
+
 .bg_cover {
   background-position: center center;
   background-size: cover;
