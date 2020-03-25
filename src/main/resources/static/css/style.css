@@ -99,6 +99,19 @@ p {
   text-align: center;
 }
 
+.forecast-panel p {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.forecast-panel button {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #0067f4;
+  background-color: inherit;
+  border: 0;
+}
+
 .section {
   padding-top: 120px;
   padding-bottom: 130px;

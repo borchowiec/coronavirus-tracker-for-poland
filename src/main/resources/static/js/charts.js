@@ -1,31 +1,66 @@
 let chartData = [
-    {date:"04.03.2020", cases: 1},
-    {date:"05.03.2020", cases: 1},
-    {date:"06.03.2020", cases: 5},
-    {date:"07.03.2020", cases: 6},
-    {date:"08.03.2020", cases: 11},
-    {date:"09.03.2020", cases: 17},
-    {date:"10.03.2020", cases: 22},
-    {date:"11.03.2020", cases: 31},
-    {date:"12.03.2020", cases: 51},
-    {date:"13.03.2020", cases: 68},
-    {date:"14.03.2020", cases: 104},
-    {date:"15.03.2020", cases: 125},
-    {date:"16.03.2020", cases: 177},
-    {date:"17.03.2020", cases: 238},
-    {date:"18.03.2020", cases: 287},
-    {date:"19.03.2020", cases: 355},
-    {date:"20.03.2020", cases: 425},
-    {date:"21.03.2020", cases: 536},
-    {date:"22.03.2020", cases: 634}
+    {date:new Date(2020, 3,4), cases: 1},
+    {date:new Date(2020, 3,5), cases: 1},
+    {date:new Date(2020, 3,6), cases: 5},
+    {date:new Date(2020, 3,7), cases: 6},
+    {date:new Date(2020, 3,8), cases: 11},
+    {date:new Date(2020, 3,9), cases: 17},
+    {date:new Date(2020, 3,10), cases: 22},
+    {date:new Date(2020, 3,11), cases: 31},
+    {date:new Date(2020, 3,12), cases: 51},
+    {date:new Date(2020, 3,13), cases: 68},
+    {date:new Date(2020, 3,14), cases: 104},
+    {date:new Date(2020, 3,15), cases: 125},
+    {date:new Date(2020, 3,16), cases: 177},
+    {date:new Date(2020, 3,17), cases: 238},
+    {date:new Date(2020, 3,18), cases: 287},
+    {date:new Date(2020, 3,19), cases: 355},
+    {date:new Date(2020, 3,20), cases: 425},
+    {date:new Date(2020, 3,21), cases: 536},
+    {date:new Date(2020, 3,22), cases: 634},
 ];
 
-function repaintGraphs() {
-    $("#example-graph1").ejChart({
+function linkButtonsToChart(sectionId, graphId) {
+    var chart = $(graphId).ejChart("instance");
+
+    $(`${sectionId} .forecast-panel .no-forecast`).on("click", () => {
+        chart.model.series[0].trendlines[0].forwardForecast = 1;
+        chart.redraw();
+    });
+
+    $(`${sectionId} .forecast-panel .week-forecast`).on("click", () => {
+        chart.model.series[0].trendlines[0].forwardForecast = 7;
+        chart.redraw();
+    });
+
+    $(`${sectionId} .forecast-panel .month-forecast`).on("click", () => {
+        chart.model.series[0].trendlines[0].forwardForecast = 30;
+        chart.redraw();
+    });
+
+    $(`${sectionId} .forecast-panel .three-months-forecast`).on("click", () => {
+        chart.model.series[0].trendlines[0].forwardForecast = 90;
+        chart.redraw();
+    });
+}
+
+function createFirstExample() {
+    const graphId = "#example-graph1";
+    const sectionId = "#first-section";
+
+    // todo za dużo punktów na skali
+
+    // create graph
+    $(graphId).ejChart({
+        primaryXAxis: {
+            labelFormat: 'dd/MM/yy'
+        },
         series:[{
             trendlines: [{
                 visibility: "visible",
-                type: "polynomial"
+                type: "polynomial",
+                forwardForecast: 7,
+                polynomialOrder: 6
             }],
             type: "line",
             width: 0,
@@ -43,6 +78,11 @@ function repaintGraphs() {
         }]
     });
 
+    // link forecast buttons to chart
+    linkButtonsToChart(sectionId, graphId);
+}
+
+function createSecondExample() {
     $("#example-graph2").ejChart({
         series:[{
             trendlines: [{
@@ -66,12 +106,18 @@ function repaintGraphs() {
     });
 }
 
+function repaintGraphs() {
+    $("#example-graph1").ejChart("instance").redraw();
+    $("#example-graph2").ejChart("instance").redraw();
+}
+
 $(window).on('load', function(event) {
     $(function () {
-        repaintGraphs();
+        createFirstExample();
+        createSecondExample();
     });
 });
 
-$( window ).resize(function() {
+$(window).resize(function() {
     repaintGraphs();
 });
