@@ -58,11 +58,14 @@ function createFirstExample() {
             maximumLabels: 2.5
         },
         series:[{
+            name: 'Liczba zarażeń',
             trendlines: [{
                 visibility: "visible",
                 type: "polynomial",
                 forwardForecast: 7,
-                polynomialOrder: 6
+                polynomialOrder: 6,
+                name: 'Prognoza',
+                fill: '#1a4fc0'
             }],
             type: "line",
             width: 0,
