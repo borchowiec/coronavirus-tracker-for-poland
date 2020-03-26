@@ -21,7 +21,7 @@ let chartData = [
 ];
 
 function linkButtonsToChart(sectionId, graphId) {
-    var chart = $(graphId).ejChart("instance");
+    const chart = $(graphId).ejChart("instance");
 
     $(`${sectionId} .forecast-panel .no-forecast`).on("click", () => {
         chart.model.series[0].trendlines[0].forwardForecast = 1;
@@ -48,12 +48,14 @@ function createFirstExample() {
     const graphId = "#example-graph1";
     const sectionId = "#first-section";
 
-    // todo za dużo punktów na skali
-
     // create graph
     $(graphId).ejChart({
         primaryXAxis: {
-            labelFormat: 'dd/MM/yy'
+            alignment: "center",
+            labelIntersectAction : 'hide',
+            labelFormat: 'dd/MM/yy',
+            labelRotation: 45,
+            maximumLabels: 2.5
         },
         series:[{
             trendlines: [{
