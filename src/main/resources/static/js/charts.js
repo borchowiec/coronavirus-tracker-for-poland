@@ -58,6 +58,9 @@ function createFirstExample() {
             maximumLabels: 2.5
         },
         series:[{
+            tooltip: {
+                visible: true
+            },
             name: 'Liczba zarażeń',
             trendlines: [{
                 visibility: "visible",
