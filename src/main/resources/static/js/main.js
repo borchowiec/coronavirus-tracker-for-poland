@@ -1,3 +1,6 @@
+/**
+ * Loads current number of cases. When data is loaded, puts it to page with "counting" animation.
+ */
 function loadNumberOfCases() {
     const numberOfCases = 946; // todo dummy data
     for (let i = 0; i <= numberOfCases; i++) {

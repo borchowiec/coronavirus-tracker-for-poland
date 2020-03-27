@@ -93,6 +93,10 @@ p {
   color: #121212;
   margin: 0px; }
 
+
+
+/*===== PROJECT CSS STARTS =====*/
+
 #home {
   height: 560px;
   background-color: #0067f4;
@@ -136,6 +140,12 @@ p {
     top: 10px;
     left: 10px;
 }
+
+/*===== PROJECT CSS ENDS =====*/
+
+
+
+/*===== TEMPLATE CSS STARTS =====*/
 
 .bg_cover {
   background-position: center center;

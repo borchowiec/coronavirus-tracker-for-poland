@@ -1,3 +1,4 @@
+// todo temporary data
 let chartData = [
     {date:new Date(2020, 3,4), cases: 1},
     {date:new Date(2020, 3,5), cases: 1},
@@ -20,30 +21,42 @@ let chartData = [
     {date:new Date(2020, 3,22), cases: 634},
 ];
 
+/**
+ * Connects buttons to charts.
+ * @param sectionId Section that contains graph.
+ * @param graphId Graph which will have the buttons connected.
+ */
 function linkButtonsToChart(sectionId, graphId) {
     const chart = $(graphId).ejChart("instance");
 
+    // no forecast
     $(`${sectionId} .forecast-panel .no-forecast`).on("click", () => {
         chart.model.series[0].trendlines[0].forwardForecast = 1;
         chart.redraw();
     });
 
+    // one week forecast
     $(`${sectionId} .forecast-panel .week-forecast`).on("click", () => {
         chart.model.series[0].trendlines[0].forwardForecast = 7;
         chart.redraw();
     });
 
+    // one month forecast
     $(`${sectionId} .forecast-panel .month-forecast`).on("click", () => {
         chart.model.series[0].trendlines[0].forwardForecast = 30;
         chart.redraw();
     });
 
+    // three months forecast
     $(`${sectionId} .forecast-panel .three-months-forecast`).on("click", () => {
         chart.model.series[0].trendlines[0].forwardForecast = 90;
         chart.redraw();
     });
 }
 
+/**
+ * Template method that create example graph
+ */
 function createFirstExample() {
     const graphId = "#example-graph1";
     const sectionId = "#first-section";
@@ -90,12 +103,34 @@ function createFirstExample() {
     linkButtonsToChart(sectionId, graphId);
 }
 
+/**
+ * Template method that create example graph
+ */
 function createSecondExample() {
-    $("#example-graph2").ejChart({
+    const graphId = "#example-graph2";
+    const sectionId = "#second-section";
+
+    // create graph
+    $(graphId).ejChart({
+        primaryXAxis: {
+            alignment: "center",
+            labelIntersectAction : 'hide',
+            labelFormat: 'dd/MM/yy',
+            labelRotation: 45,
+            maximumLabels: 2.5
+        },
         series:[{
+            tooltip: {
+                visible: true
+            },
+            name: 'Liczba zarażeń',
             trendlines: [{
                 visibility: "visible",
-                type: "polynomial"
+                type: "polynomial",
+                forwardForecast: 7,
+                polynomialOrder: 6,
+                name: 'Prognoza',
+                fill: '#1a4fc0'
             }],
             type: "line",
             width: 0,
@@ -112,13 +147,22 @@ function createSecondExample() {
             yName: "cases"
         }]
     });
+
+    // link forecast buttons to chart
+    linkButtonsToChart(sectionId, graphId);
 }
 
+/**
+ * Repaints graphs. Can be used e.g. after resizing window.
+ */
 function repaintGraphs() {
     $("#example-graph1").ejChart("instance").redraw();
     $("#example-graph2").ejChart("instance").redraw();
 }
 
+/**
+ * Creates graphs after loading page.
+ */
 $(window).on('load', function(event) {
     $(function () {
         createFirstExample();
@@ -126,6 +170,9 @@ $(window).on('load', function(event) {
     });
 });
 
+/**
+ * Repaints graphs after resizing window.
+ */
 $(window).resize(function() {
     repaintGraphs();
 });
