@@ -1,6 +1,7 @@
 package com.borchowiec.coronavirustrackerforpoland.service;
 
 import com.borchowiec.coronavirustrackerforpoland.model.History;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,13 @@ public class HistoryService {
 
     @Scheduled(fixedDelayString = "${update.history.delay}")
     public void updateHistoryList() {
-        /*String url = "https://covidapi.info/api/v1/country/POL";
+        String url = "https://covidapi.info/api/v1/country/POL";
         ResponseEntity<String> response
                 = restTemplate.getForEntity(url, String.class);
-        System.out.println(response.getBody());*/
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            historyList = parseHistoryList(response);
+        }
     }
 
     public Optional<List<History>> getHistoryList() {
@@ -39,5 +43,9 @@ public class HistoryService {
 
     public void setHistoryList(List<History> historyList) {
         this.historyList = historyList;
+    }
+
+    public List<History> parseHistoryList(ResponseEntity<String> responseEntity) {
+        return null;
     }
 }
