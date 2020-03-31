@@ -1,6 +1,7 @@
 package com.borchowiec.coronavirustrackerforpoland.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class History {
     private LocalDate date;
@@ -78,5 +79,37 @@ public class History {
 
     public void setNewRecovered(int newRecovered) {
         this.newRecovered = newRecovered;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        History history = (History) o;
+        return confirmed == history.confirmed &&
+                newConfirmed == history.newConfirmed &&
+                deaths == history.deaths &&
+                newDeaths == history.newDeaths &&
+                recovered == history.recovered &&
+                newRecovered == history.newRecovered &&
+                Objects.equals(date, history.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, confirmed, newConfirmed, deaths, newDeaths, recovered, newRecovered);
+    }
+
+    @Override
+    public String toString() {
+        return "History{" +
+                "date=" + date +
+                ", confirmed=" + confirmed +
+                ", newConfirmed=" + newConfirmed +
+                ", deaths=" + deaths +
+                ", newDeaths=" + newDeaths +
+                ", recovered=" + recovered +
+                ", newRecovered=" + newRecovered +
+                '}';
     }
 }
