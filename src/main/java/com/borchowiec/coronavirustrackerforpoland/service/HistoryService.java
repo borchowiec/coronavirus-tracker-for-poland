@@ -26,6 +26,10 @@ public class HistoryService {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Downloads coronavirus data from external api and updates {@link #historyList}
+     * @throws JsonProcessingException When the response data is not in the expected format.
+     */
     @Scheduled(fixedDelayString = "${update.history.delay}")
     public void updateHistoryList() throws JsonProcessingException {
         String url = "https://covidapi.info/api/v1/country/POL";
@@ -48,6 +52,12 @@ public class HistoryService {
         this.historyList = historyList;
     }
 
+    /**
+     * Parses response, that contains coronavirus data from external api, to list containing {@link History} objects.
+     * @param response Coronavirus api response.
+     * @return List with {@link History} objects.
+     * @throws JsonProcessingException When the response data is not in the expected format.
+     */
     public List<History> parseHistoryList(ResponseEntity<String> response) throws JsonProcessingException {
         // getting "result" object from json. This object contains data that we want to get.
         ObjectMapper mapper = new ObjectMapper();
