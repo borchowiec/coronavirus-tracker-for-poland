@@ -54,14 +54,20 @@ function linkButtonsToChart(sectionId, graphId) {
     });
 }
 
+/**
+ * Creates graph that shows numbers of cases each day.
+ */
 function createConfirmedGraph() {
     const graphId = "#confirmed-graph";
     const sectionId = "#confirmed-section";
+
+    // getting data from api
     axios.get('/api/confirmed')
         .then(function (response) {
+            // mapping data. Converting string to Date
             const data = response.data.map(el => {return {confirmed: el.confirmed, date: new Date(el.date)}});
 
-            // create graph
+            // creates graph
             $(graphId).ejChart({
                 primaryXAxis: {
                     alignment: "center",

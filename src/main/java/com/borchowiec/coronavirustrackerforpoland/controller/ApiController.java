@@ -20,8 +20,12 @@ public class ApiController {
         this.historyService = historyService;
     }
 
+    /**
+     * @return Numbers of all confirmed cases each day with date.
+     */
     @GetMapping("/api/confirmed")
     public List<AllConfirmedResponse> getAllConfirmed() {
+        // gets current history with all data
         List<History> historyList = historyService.getHistoryList().orElseThrow(() -> {
             try {
                 historyService.updateHistoryList();
@@ -31,6 +35,7 @@ public class ApiController {
             return new DataNotAvailableException();
         });
 
+        // returns only wanted data
         return historyList.stream()
                 .map(history -> new AllConfirmedResponse(history.getConfirmed(), history.getDate()))
                 .collect(Collectors.toList());
