@@ -54,53 +54,57 @@ function linkButtonsToChart(sectionId, graphId) {
     });
 }
 
-/**
- * Template method that create example graph
- */
-function createFirstExample() {
-    const graphId = "#example-graph1";
-    const sectionId = "#first-section";
+function createConfirmedGraph() {
+    const graphId = "#confirmed-graph";
+    const sectionId = "#confirmed-section";
+    axios.get('/api/confirmed')
+        .then(function (response) {
+            const data = response.data.map(el => {return {confirmed: el.confirmed, date: new Date(el.date)}});
 
-    // create graph
-    $(graphId).ejChart({
-        primaryXAxis: {
-            alignment: "center",
-            labelIntersectAction : 'hide',
-            labelFormat: 'dd/MM/yy',
-            labelRotation: 45,
-            maximumLabels: 2.5
-        },
-        series:[{
-            tooltip: {
-                visible: true
-            },
-            name: 'Liczba zarażeń',
-            trendlines: [{
-                visibility: "visible",
-                type: "polynomial",
-                forwardForecast: 7,
-                polynomialOrder: 6,
-                name: 'Prognoza',
-                fill: '#1a4fc0'
-            }],
-            type: "line",
-            width: 0,
-            enableAnimation: true,
-            marker: {
-                shape: 'circle',
-                size: {
-                    height: 10, width: 10
+            // create graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 2.5
                 },
-                visible: true
-            },
-            dataSource: chartData,
-            xName: "date",
-            yName: "cases"
-        }]
-    });
+                series:[{
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Liczba zarażeń',
+                    trendlines: [{
+                        visibility: "visible",
+                        type: "polynomial",
+                        forwardForecast: 7,
+                        polynomialOrder: 6,
+                        name: 'Prognoza',
+                        fill: '#1a4fc0'
+                    }],
+                    type: "line",
+                    width: 0,
+                    enableAnimation: true,
+                    marker: {
+                        shape: 'circle',
+                        size: {
+                            height: 10, width: 10
+                        },
+                        visible: true
+                    },
+                    dataSource: data,
+                    xName: "date",
+                    yName: "confirmed"
+                }]
+            });
 
-    // link forecast buttons to chart
-    linkButtonsToChart(sectionId, graphId);
+            // link forecast buttons to chart
+            linkButtonsToChart(sectionId, graphId);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 /**
@@ -156,7 +160,7 @@ function createSecondExample() {
  * Repaints graphs. Can be used e.g. after resizing window.
  */
 function repaintGraphs() {
-    $("#example-graph1").ejChart("instance").redraw();
+    $("#confirmed-graph").ejChart("instance").redraw();
     $("#example-graph2").ejChart("instance").redraw();
 }
 
@@ -165,7 +169,7 @@ function repaintGraphs() {
  */
 $(window).on('load', function(event) {
     $(function () {
-        createFirstExample();
+        createConfirmedGraph();
         createSecondExample();
     });
 });
