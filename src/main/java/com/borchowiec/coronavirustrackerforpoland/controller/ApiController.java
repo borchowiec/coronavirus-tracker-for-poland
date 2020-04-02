@@ -21,6 +21,21 @@ public class ApiController {
         this.historyService = historyService;
     }
 
+    /**
+     * Gets list of {@link GraphDataResponse GraphDataResponses} that contains specific data about coronavirus.
+     * You have to specify what type of data you want to receive by giving proper argument:
+     * <ol>
+     *     <li>confirmed</li>
+     *     <li>deaths</li>
+     *     <li>recoveries</li>
+     *     <li>new_confirmed</li>
+     *     <li>new_deaths</li>
+     *     <li>new_recoveries</li>
+     * </ol>
+     * @param dataType Argument that specifies what type of data will be returned.
+     * @return List of {@link GraphDataResponse GraphDataResponses} that contains specific data about coronavirus.
+     * @throws JsonProcessingException
+     */
     @GetMapping("/api/{dataType}")
     public List<GraphDataResponse> getData(@PathVariable String dataType) throws JsonProcessingException {
         try {

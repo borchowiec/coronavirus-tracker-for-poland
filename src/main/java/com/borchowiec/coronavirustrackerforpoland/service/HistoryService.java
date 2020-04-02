@@ -112,6 +112,11 @@ public class HistoryService {
         return result;
     }
 
+    /**
+     * Retrieves specific data from {@link #historyList}. You must specify data by giving proper {@link GraphDataType}.
+     * @param type Specifies returned data.
+     * @return Specific data retrieves from {@link #historyList}.
+     */
     public List<GraphDataResponse> getGraphData(GraphDataType type) {
         List<History> allData = Optional.ofNullable(historyList).orElseThrow(DataNotAvailableException::new);
         switch (type) {

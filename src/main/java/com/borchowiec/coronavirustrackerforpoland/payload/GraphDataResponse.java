@@ -3,6 +3,9 @@ package com.borchowiec.coronavirustrackerforpoland.payload;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Contains value over the day. Could be used as payload containing graphs data.
+ */
 public class GraphDataResponse {
     private int value;
     private LocalDate date;
