@@ -65,7 +65,7 @@ function createConfirmedGraph() {
     axios.get('/api/confirmed')
         .then(function (response) {
             // mapping data. Converting string to Date
-            const data = response.data.map(el => {return {confirmed: el.confirmed, date: new Date(el.date)}});
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
 
             // creates graph
             $(graphId).ejChart({
@@ -101,7 +101,7 @@ function createConfirmedGraph() {
                     },
                     dataSource: data,
                     xName: "date",
-                    yName: "confirmed"
+                    yName: "value"
                 }]
             });
 
