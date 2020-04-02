@@ -2,7 +2,6 @@ package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.exception.BadRequestException;
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
-import com.borchowiec.coronavirustrackerforpoland.model.History;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.borchowiec.coronavirustrackerforpoland.service.GraphDataType;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ApiController {
@@ -29,32 +27,10 @@ public class ApiController {
             GraphDataType graphDataType = GraphDataType.valueOf(dataType.toUpperCase());
             return historyService.getGraphData(graphDataType);
         } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Given wrong argument" + dataType);
+            throw new BadRequestException("Given wrong argument: " + dataType);
         } catch (DataNotAvailableException e) {
             historyService.updateHistoryList();
             throw e;
         }
     }
-
-    /**
-     * @return Numbers of all confirmed cases each day with date.
-     */
-    @GetMapping("/api/confirmed")
-    public List<GraphDataResponse> getAllConfirmed() {
-        // gets current history with all data
-        List<History> historyList = historyService.getHistoryList().orElseThrow(() -> {
-            try {
-                historyService.updateHistoryList();
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            return new DataNotAvailableException();
-        });
-
-        // returns only wanted data
-        return historyList.stream()
-                .map(history -> new GraphDataResponse(history.getConfirmed(), history.getDate()))
-                .collect(Collectors.toList());
-    }
-
 }

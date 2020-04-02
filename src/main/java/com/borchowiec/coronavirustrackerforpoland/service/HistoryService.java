@@ -16,8 +16,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.borchowiec.coronavirustrackerforpoland.service.GraphDataType.*;
-
 @Service
 public class HistoryService {
     private List<History> historyList;
