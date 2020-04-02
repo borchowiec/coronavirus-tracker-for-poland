@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.jboss.logging.Logger;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Aspect
 @Component
 public class ApiAspect {
@@ -26,7 +28,8 @@ public class ApiAspect {
      */
     @Before("allApiMethods()")
     public void logMethodCalls(JoinPoint joinPoint){
-        logger.info("Starting " + joinPoint.getSignature().toShortString());
+        logger.info("Starting " + joinPoint.getSignature().toShortString() + " args: "
+                + Arrays.toString(joinPoint.getArgs()));
     }
 
     /**
@@ -36,6 +39,7 @@ public class ApiAspect {
      */
     @AfterThrowing(value = "allApiMethods()", throwing = "e")
     public void logThrowingExceptions(JoinPoint joinPoint, Exception e) {
-        logger.error(joinPoint.getSignature().toShortString() + ": " + e.getMessage());
+        logger.error(joinPoint.getSignature().toShortString() + " args: "
+                + Arrays.toString(joinPoint.getArgs()) + ": " + e.getMessage());
     }
 }
