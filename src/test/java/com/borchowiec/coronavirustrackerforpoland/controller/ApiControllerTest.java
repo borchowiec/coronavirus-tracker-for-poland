@@ -1,7 +1,7 @@
 package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.model.History;
-import com.borchowiec.coronavirustrackerforpoland.payload.AllConfirmedResponse;
+import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,13 +61,13 @@ class ApiControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
-        List<AllConfirmedResponse> actual = Stream
-                .of(objectMapper.readValue(responseAsString, AllConfirmedResponse[].class))
+        List<GraphDataResponse> actual = Stream
+                .of(objectMapper.readValue(responseAsString, GraphDataResponse[].class))
                 .collect(Collectors.toList());
 
         // then
-        List<AllConfirmedResponse> expected = historyList
-                .stream().map(history -> new AllConfirmedResponse(history.getConfirmed(), history.getDate()))
+        List<GraphDataResponse> expected = historyList
+                .stream().map(history -> new GraphDataResponse(history.getConfirmed(), history.getDate()))
                 .collect(Collectors.toList());
         assertEquals(expected, actual);
     }

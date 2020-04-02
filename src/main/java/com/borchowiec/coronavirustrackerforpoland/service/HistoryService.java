@@ -1,6 +1,8 @@
 package com.borchowiec.coronavirustrackerforpoland.service;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.History;
+import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.borchowiec.coronavirustrackerforpoland.service.GraphDataType.*;
 
 @Service
 public class HistoryService {
@@ -107,5 +112,37 @@ public class HistoryService {
         }
 
         return result;
+    }
+
+    public List<GraphDataResponse> getGraphData(GraphDataType type) {
+        List<History> allData = Optional.ofNullable(historyList).orElseThrow(DataNotAvailableException::new);
+        switch (type) {
+            case CONFIRMED:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getConfirmed(), history.getDate()))
+                        .collect(Collectors.toList());
+            case DEATHS:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getDeaths(), history.getDate()))
+                        .collect(Collectors.toList());
+            case RECOVERIES:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getRecovered(), history.getDate()))
+                        .collect(Collectors.toList());
+            case NEW_CONFIRMED:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getNewConfirmed(), history.getDate()))
+                        .collect(Collectors.toList());
+            case NEW_DEATHS:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getNewDeaths(), history.getDate()))
+                        .collect(Collectors.toList());
+            case NEW_RECOVERIES:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getNewRecovered(), history.getDate()))
+                        .collect(Collectors.toList());
+            default:
+                throw new IllegalArgumentException("Given wrong argument: " + type + ". Use GraphDataType enum.");
+        }
     }
 }

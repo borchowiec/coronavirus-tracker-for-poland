@@ -3,21 +3,21 @@ package com.borchowiec.coronavirustrackerforpoland.payload;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class AllConfirmedResponse {
-    private int confirmed;
+public class GraphDataResponse {
+    private int value;
     private LocalDate date;
 
-    public AllConfirmedResponse(int confirmed, LocalDate date) {
-        this.confirmed = confirmed;
+    public GraphDataResponse(int value, LocalDate date) {
+        this.value = value;
         this.date = date;
     }
 
-    public int getConfirmed() {
-        return confirmed;
+    public int getValue() {
+        return value;
     }
 
-    public void setConfirmed(int confirmed) {
-        this.confirmed = confirmed;
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public LocalDate getDate() {
@@ -32,20 +32,20 @@ public class AllConfirmedResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AllConfirmedResponse that = (AllConfirmedResponse) o;
-        return confirmed == that.confirmed &&
+        GraphDataResponse that = (GraphDataResponse) o;
+        return value == that.value &&
                 Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(confirmed, date);
+        return Objects.hash(value, date);
     }
 
     @Override
     public String toString() {
         return "AllConfirmedResponse{" +
-                "confirmed=" + confirmed +
+                "value=" + value +
                 ", date=" + date +
                 '}';
     }
