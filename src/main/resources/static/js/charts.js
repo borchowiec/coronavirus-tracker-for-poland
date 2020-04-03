@@ -1,26 +1,3 @@
-// todo temporary data
-let chartData = [
-    {date:new Date(2020, 3,4), cases: 1},
-    {date:new Date(2020, 3,5), cases: 1},
-    {date:new Date(2020, 3,6), cases: 5},
-    {date:new Date(2020, 3,7), cases: 6},
-    {date:new Date(2020, 3,8), cases: 11},
-    {date:new Date(2020, 3,9), cases: 17},
-    {date:new Date(2020, 3,10), cases: 22},
-    {date:new Date(2020, 3,11), cases: 31},
-    {date:new Date(2020, 3,12), cases: 51},
-    {date:new Date(2020, 3,13), cases: 68},
-    {date:new Date(2020, 3,14), cases: 104},
-    {date:new Date(2020, 3,15), cases: 125},
-    {date:new Date(2020, 3,16), cases: 177},
-    {date:new Date(2020, 3,17), cases: 238},
-    {date:new Date(2020, 3,18), cases: 287},
-    {date:new Date(2020, 3,19), cases: 355},
-    {date:new Date(2020, 3,20), cases: 425},
-    {date:new Date(2020, 3,21), cases: 536},
-    {date:new Date(2020, 3,22), cases: 634},
-];
-
 /**
  * Connects buttons to charts.
  * @param sectionId Section that contains graph.
