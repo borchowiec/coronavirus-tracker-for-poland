@@ -114,52 +114,62 @@ function createConfirmedGraph() {
 }
 
 /**
- * Template method that create example graph
+ * Creates graph that shows numbers of deaths each day.
  */
-function createSecondExample() {
-    const graphId = "#example-graph2";
-    const sectionId = "#second-section";
+function createDeathsGraph() {
+    const graphId = "#deaths-graph";
+    const sectionId = "#deaths-section";
 
-    // create graph
-    $(graphId).ejChart({
-        primaryXAxis: {
-            alignment: "center",
-            labelIntersectAction : 'hide',
-            labelFormat: 'dd/MM/yy',
-            labelRotation: 45,
-            maximumLabels: 2.5
-        },
-        series:[{
-            tooltip: {
-                visible: true
-            },
-            name: 'Liczba zarażeń',
-            trendlines: [{
-                visibility: "visible",
-                type: "polynomial",
-                forwardForecast: 7,
-                polynomialOrder: 6,
-                name: 'Prognoza',
-                fill: '#1a4fc0'
-            }],
-            type: "line",
-            width: 0,
-            enableAnimation: true,
-            marker: {
-                shape: 'circle',
-                size: {
-                    height: 10, width: 10
+    // getting data from api
+    axios.get('/api/deaths')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 2.5
                 },
-                visible: true
-            },
-            dataSource: chartData,
-            xName: "date",
-            yName: "cases"
-        }]
-    });
+                series:[{
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Liczba zgonów',
+                    trendlines: [{
+                        visibility: "visible",
+                        type: "polynomial",
+                        forwardForecast: 7,
+                        polynomialOrder: 6,
+                        name: 'Prognoza',
+                        fill: '#1a4fc0'
+                    }],
+                    type: "line",
+                    width: 0,
+                    enableAnimation: true,
+                    marker: {
+                        shape: 'circle',
+                        size: {
+                            height: 10, width: 10
+                        },
+                        visible: true
+                    },
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
 
-    // link forecast buttons to chart
-    linkButtonsToChart(sectionId, graphId);
+            // link forecast buttons to chart
+            linkButtonsToChart(sectionId, graphId);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 /**
@@ -167,7 +177,7 @@ function createSecondExample() {
  */
 function repaintGraphs() {
     $("#confirmed-graph").ejChart("instance").redraw();
-    $("#example-graph2").ejChart("instance").redraw();
+    $("#deaths-graph").ejChart("instance").redraw();
 }
 
 /**
@@ -176,7 +186,7 @@ function repaintGraphs() {
 $(window).on('load', function(event) {
     $(function () {
         createConfirmedGraph();
-        createSecondExample();
+        createDeathsGraph();
     });
 });
 
