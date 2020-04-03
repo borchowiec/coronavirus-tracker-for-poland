@@ -1,15 +1,16 @@
 package com.borchowiec.coronavirustrackerforpoland.controller;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.BadRequestException;
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
-import com.borchowiec.coronavirustrackerforpoland.model.History;
-import com.borchowiec.coronavirustrackerforpoland.payload.AllConfirmedResponse;
+import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
+import com.borchowiec.coronavirustrackerforpoland.service.GraphDataType;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ApiController {
@@ -21,24 +22,30 @@ public class ApiController {
     }
 
     /**
-     * @return Numbers of all confirmed cases each day with date.
+     * Gets list of {@link GraphDataResponse GraphDataResponses} that contains specific data about coronavirus.
+     * You have to specify what type of data you want to receive by giving proper argument:
+     * <ol>
+     *     <li>confirmed</li>
+     *     <li>deaths</li>
+     *     <li>recoveries</li>
+     *     <li>new_confirmed</li>
+     *     <li>new_deaths</li>
+     *     <li>new_recoveries</li>
+     * </ol>
+     * @param dataType Argument that specifies what type of data will be returned.
+     * @return List of {@link GraphDataResponse GraphDataResponses} that contains specific data about coronavirus.
+     * @throws JsonProcessingException
      */
-    @GetMapping("/api/confirmed")
-    public List<AllConfirmedResponse> getAllConfirmed() {
-        // gets current history with all data
-        List<History> historyList = historyService.getHistoryList().orElseThrow(() -> {
-            try {
-                historyService.updateHistoryList();
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            return new DataNotAvailableException();
-        });
-
-        // returns only wanted data
-        return historyList.stream()
-                .map(history -> new AllConfirmedResponse(history.getConfirmed(), history.getDate()))
-                .collect(Collectors.toList());
+    @GetMapping("/api/{dataType}")
+    public List<GraphDataResponse> getData(@PathVariable String dataType) throws JsonProcessingException {
+        try {
+            GraphDataType graphDataType = GraphDataType.valueOf(dataType.toUpperCase());
+            return historyService.getGraphData(graphDataType);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Given wrong argument: " + dataType);
+        } catch (DataNotAvailableException e) {
+            historyService.updateHistoryList();
+            throw e;
+        }
     }
-
 }

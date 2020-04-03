@@ -1,7 +1,8 @@
 package com.borchowiec.coronavirustrackerforpoland.controller;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.History;
-import com.borchowiec.coronavirustrackerforpoland.payload.AllConfirmedResponse;
+import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,11 +20,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(ApiController.class)
 class ApiControllerTest {
@@ -42,33 +44,33 @@ class ApiControllerTest {
     }
 
     @Test
-    void getAllConfirmed_dataDoesntExist_shouldReturn204() throws Exception {
-        when(historyService.getHistoryList()).thenReturn(Optional.empty());
-        mvc.perform(get("/api/confirmed")).andDo(print()).andExpect(status().isNoContent());
+    void getData_badRequest_shouldReturn400() throws Exception {
+        mvc.perform(get("/api/wrong_value")).andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
-    void getAllConfirmed_dataExists_shouldReturnProperPayloadAnd200() throws Exception {
+    void getData_dataDoesntExist_shouldReturn204() throws Exception {
+        when(historyService.getGraphData(any())).thenThrow(new DataNotAvailableException());
+        mvc.perform(get("/api/deaths")).andDo(print()).andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getData_dataExists_shouldReturnProperPayloadAnd200() throws Exception {
         // given
-        List<History> historyList = Stream.of(new History(LocalDate.parse("2020-03-28"), 200, 200,
-                10, 10, 100, 100),
-                new History(LocalDate.parse("2020-03-29"), 210, 10, 11, 1,
-                        110, 10)).collect(Collectors.toList());
+        List<GraphDataResponse> expected = Stream.of(new GraphDataResponse(100, LocalDate.parse("2020-02-02")),
+                new GraphDataResponse(110, LocalDate.parse("2020-02-03"))).collect(Collectors.toList());
 
         // when
-        when(historyService.getHistoryList()).thenReturn(Optional.of(historyList));
-        ResultActions resultActions = mvc.perform(get("/api/confirmed"))
+        when(historyService.getGraphData(any())).thenReturn(expected);
+        ResultActions resultActions = mvc.perform(get("/api/recoveries"))
                 .andDo(print())
                 .andExpect(status().isOk());
         String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
-        List<AllConfirmedResponse> actual = Stream
-                .of(objectMapper.readValue(responseAsString, AllConfirmedResponse[].class))
+        List<GraphDataResponse> actual = Stream
+                .of(objectMapper.readValue(responseAsString, GraphDataResponse[].class))
                 .collect(Collectors.toList());
 
         // then
-        List<AllConfirmedResponse> expected = historyList
-                .stream().map(history -> new AllConfirmedResponse(history.getConfirmed(), history.getDate()))
-                .collect(Collectors.toList());
         assertEquals(expected, actual);
     }
 }

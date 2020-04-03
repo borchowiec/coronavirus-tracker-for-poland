@@ -1,6 +1,8 @@
 package com.borchowiec.coronavirustrackerforpoland.service;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.History;
+import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -26,6 +29,13 @@ class HistoryServiceTest {
 
     @MockBean
     private RestTemplate restTemplate;
+
+    public static List<History> getHistoryListExample() {
+        return Stream.of(new History(LocalDate.parse("2020-03-28"), 200, 200, 10,
+                        10, 100, 100),
+                new History(LocalDate.parse("2020-03-29"), 210, 10, 11, 1,
+                        110, 10)).collect(Collectors.toList());
+    }
 
     @Test
     void getHistoryList_dataExists_shouldReturnOptionalWithData() {
@@ -208,5 +218,120 @@ class HistoryServiceTest {
                         140, 140, 12, 12, 1, 1)
         ).collect(Collectors.toList());
         assertEquals(expected, actual);
+    }
+
+    // getGraphData ====================================================================================================
+    @Test
+    void getGraphData_dataDoesntExist_shouldThrowDataNotAvailableException() {
+        HistoryService historyService = new HistoryService();
+        assertThrows(DataNotAvailableException.class, () -> historyService.getGraphData(GraphDataType.CONFIRMED));
+    }
+
+    @Test
+    void getGraphData_givenConfirmed_shouldReturnConfirmedData() {
+        // given
+        GraphDataType argument = GraphDataType.CONFIRMED;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getConfirmed(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenDeaths_shouldReturnDeathsData() {
+        // given
+        GraphDataType argument = GraphDataType.DEATHS;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getDeaths(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenRecoveries_shouldReturnRecoveriesData() {
+        // given
+        GraphDataType argument = GraphDataType.RECOVERIES;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getRecovered(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenNewConfirmed_shouldReturnNewConfirmedData() {
+        // given
+        GraphDataType argument = GraphDataType.NEW_CONFIRMED;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getNewConfirmed(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenNewDeaths_shouldReturnNewDeathsData() {
+        // given
+        GraphDataType argument = GraphDataType.NEW_DEATHS;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getNewDeaths(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenNewRecoveries_shouldReturnNewRecoveriesData() {
+        // given
+        GraphDataType argument = GraphDataType.NEW_RECOVERIES;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getNewRecovered(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
     }
 }
