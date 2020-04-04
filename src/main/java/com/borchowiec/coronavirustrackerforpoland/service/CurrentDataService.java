@@ -11,6 +11,11 @@ import java.io.IOException;
 @Service
 public class CurrentDataService {
 
+    /**
+     * Gets information from web pages and packs it into {@link CurrentData} object.
+     * @return {@link CurrentData} object that contains status of Poland.
+     * @throws IOException
+     */
     public CurrentData getCurrentData() throws IOException {
         String url = "https://www.worldometers.info/coronavirus/country/poland/";
         Document doc = Jsoup.connect(url).get();

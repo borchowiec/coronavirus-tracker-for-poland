@@ -54,6 +54,10 @@ public class ApiController {
         }
     }
 
+    /**
+     * @return Current status of Poland.
+     * @throws IOException
+     */
     @GetMapping("/api/current")
     public CurrentData getCurrentData() throws IOException {
         return currentDataService.getCurrentData();
