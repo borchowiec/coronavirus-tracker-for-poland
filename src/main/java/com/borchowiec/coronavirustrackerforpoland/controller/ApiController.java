@@ -2,7 +2,9 @@ package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.exception.BadRequestException;
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
+import com.borchowiec.coronavirustrackerforpoland.model.CurrentData;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
+import com.borchowiec.coronavirustrackerforpoland.service.CurrentDataService;
 import com.borchowiec.coronavirustrackerforpoland.service.GraphDataType;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,15 +12,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 public class ApiController {
 
     private final HistoryService historyService;
+    private final CurrentDataService currentDataService;
 
-    public ApiController(HistoryService historyService) {
+    public ApiController(HistoryService historyService, CurrentDataService currentDataService) {
         this.historyService = historyService;
+        this.currentDataService = currentDataService;
     }
 
     /**
@@ -47,5 +52,10 @@ public class ApiController {
             historyService.updateHistoryList();
             throw e;
         }
+    }
+
+    @GetMapping("/api/current")
+    public CurrentData getCurrentData() throws IOException {
+        return currentDataService.getCurrentData();
     }
 }

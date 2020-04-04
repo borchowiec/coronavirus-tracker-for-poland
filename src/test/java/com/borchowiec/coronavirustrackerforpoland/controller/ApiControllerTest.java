@@ -1,8 +1,9 @@
 package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
-import com.borchowiec.coronavirustrackerforpoland.model.History;
+import com.borchowiec.coronavirustrackerforpoland.model.CurrentData;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
+import com.borchowiec.coronavirustrackerforpoland.service.CurrentDataService;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,9 +38,12 @@ class ApiControllerTest {
     @MockBean
     private HistoryService historyService;
 
+    @MockBean
+    private CurrentDataService currentDataService;
+
     @BeforeEach
     void buildMvc() {
-        mvc = standaloneSetup(new ApiController(historyService)).build();
+        mvc = standaloneSetup(new ApiController(historyService, currentDataService)).build();
     }
 
     @Test
@@ -71,6 +74,20 @@ class ApiControllerTest {
                 .collect(Collectors.toList());
 
         // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getCurrentData_obtainedData_shouldReturnCurrentData() throws Exception {
+        CurrentData expected = new CurrentData(1000, 123, 321);
+
+        when(currentDataService.getCurrentData()).thenReturn(expected);
+        ResultActions resultActions = mvc.perform(get("/api/current"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
+        CurrentData actual = objectMapper.readValue(responseAsString, CurrentData.class);
+
         assertEquals(expected, actual);
     }
 }

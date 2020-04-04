@@ -1,5 +1,7 @@
 package com.borchowiec.coronavirustrackerforpoland.model;
 
+import java.util.Objects;
+
 public class CurrentData {
     private int confirmed;
     private int deaths;
@@ -33,5 +35,29 @@ public class CurrentData {
 
     public void setRecoveries(int recoveries) {
         this.recoveries = recoveries;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CurrentData that = (CurrentData) o;
+        return confirmed == that.confirmed &&
+                deaths == that.deaths &&
+                recoveries == that.recoveries;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(confirmed, deaths, recoveries);
+    }
+
+    @Override
+    public String toString() {
+        return "CurrentData{" +
+                "confirmed=" + confirmed +
+                ", deaths=" + deaths +
+                ", recoveries=" + recoveries +
+                '}';
     }
 }
