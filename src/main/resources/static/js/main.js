@@ -1,13 +1,23 @@
 /**
  * Loads current number of cases. When data is loaded, puts it to page with "counting" animation.
  */
-function loadNumberOfCases() {
-    const numberOfCases = 946; // todo dummy data
-    for (let i = 0; i <= numberOfCases; i++) {
-        setTimeout(function() {
-            $("#current-number-of-cases").text(i);
-        }, i);
-    }
+function loadCurrentData() {
+
+    axios.get('/api/current')
+        .then(function (response) {
+            const {confirmed, deaths, recoveries} = response.data;
+
+            for (let i = 0; i <= confirmed; i++) {
+                setTimeout(function() {
+                    if (i <= confirmed) $("#current-confirmed").text(i);
+                    if (i <= deaths) $("#current-deaths").text(i);
+                    if (i <= recoveries) $("#current-recoveries").text(i);
+                }, i / 10.0);
+            }
+
+        }).catch(function (error) {
+            console.log(error);
+        });
 }
 
 $(function() {
@@ -19,7 +29,7 @@ $(function() {
     $(window).on('load', function(event) {
         $('.preloader').fadeOut(500);
 
-        loadNumberOfCases();
+        loadCurrentData();
     });
     
     
