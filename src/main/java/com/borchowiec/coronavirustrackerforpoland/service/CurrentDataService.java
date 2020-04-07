@@ -25,6 +25,6 @@ public class CurrentDataService {
         int deaths = Integer.parseInt(wrappers.get(1).text().replace(",", ""));
         int recoveries = Integer.parseInt(wrappers.get(2).text().replace(",", ""));
 
-        return new CurrentData(confirmed, recoveries, deaths);
+        return new CurrentData(confirmed, deaths, recoveries);
     }
 }
