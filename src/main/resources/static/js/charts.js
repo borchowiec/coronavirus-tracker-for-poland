@@ -70,6 +70,7 @@ function createConfirmedGraph() {
                     width: 0,
                     enableAnimation: true,
                     marker: {
+                        border: {width: 0},
                         shape: 'circle',
                         size: {
                             height: 10, width: 10
@@ -130,6 +131,7 @@ function createDeathsGraph() {
                     enableAnimation: true,
                     marker: {
                         shape: 'circle',
+                        border: {width: 0},
                         size: {
                             height: 10, width: 10
                         },
@@ -305,6 +307,7 @@ function createActiveCasesGraph() {
                     enableAnimation: true,
                     marker: {
                         shape: 'circle',
+                        border: {width: 0},
                         size: {
                             height: 10, width: 10
                         },
