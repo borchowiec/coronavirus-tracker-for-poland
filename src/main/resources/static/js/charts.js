@@ -57,6 +57,7 @@ function createConfirmedGraph() {
                     tooltip: {
                         visible: true
                     },
+                    fill: "#ff781e",
                     name: 'Liczba zarażeń',
                     trendlines: [{
                         visibility: "visible",
@@ -293,6 +294,7 @@ function createActiveCasesGraph() {
                     tooltip: {
                         visible: true
                     },
+                    fill: "#735cff",
                     name: 'Liczba aktywnych przypadków',
                     trendlines: [{
                         visibility: "visible",
