@@ -57,6 +57,7 @@ function createConfirmedGraph() {
                     tooltip: {
                         visible: true
                     },
+                    fill: "#ff781e",
                     name: 'Liczba zarażeń',
                     trendlines: [{
                         visibility: "visible",
@@ -70,6 +71,7 @@ function createConfirmedGraph() {
                     width: 0,
                     enableAnimation: true,
                     marker: {
+                        border: {width: 0},
                         shape: 'circle',
                         size: {
                             height: 10, width: 10
@@ -130,6 +132,7 @@ function createDeathsGraph() {
                     enableAnimation: true,
                     marker: {
                         shape: 'circle',
+                        border: {width: 0},
                         size: {
                             height: 10, width: 10
                         },
@@ -291,6 +294,7 @@ function createActiveCasesGraph() {
                     tooltip: {
                         visible: true
                     },
+                    fill: "#735cff",
                     name: 'Liczba aktywnych przypadków',
                     trendlines: [{
                         visibility: "visible",
@@ -305,6 +309,7 @@ function createActiveCasesGraph() {
                     enableAnimation: true,
                     marker: {
                         shape: 'circle',
+                        border: {width: 0},
                         size: {
                             height: 10, width: 10
                         },
