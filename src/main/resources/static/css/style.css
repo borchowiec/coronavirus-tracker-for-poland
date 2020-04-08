@@ -142,6 +142,15 @@ p {
   background-color: #ffffff;
 }
 
+#daily-section h4 {
+  text-align: center;
+  min-height: 70px;
+}
+
+#daily-section .graph {
+  padding: 0 !important;
+}
+
 #tooltip {
   padding: 5px;
   background-color: white;
