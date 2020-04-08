@@ -80,6 +80,7 @@ public class HistoryService {
                 history.setConfirmed(node.get("confirmed").asInt());
                 history.setDeaths(node.get("deaths").asInt());
                 history.setRecovered(node.get("recovered").asInt());
+                history.setActiveCases(history.getConfirmed() - history.getDeaths() - history.getRecovered());
                 result.add(history);
             }
         });
@@ -143,6 +144,10 @@ public class HistoryService {
             case NEW_RECOVERIES:
                 return allData.stream()
                         .map(history -> new GraphDataResponse(history.getNewRecovered(), history.getDate()))
+                        .collect(Collectors.toList());
+            case ACTIVE_CASES:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getActiveCases(), history.getDate()))
                         .collect(Collectors.toList());
             default:
                 throw new IllegalArgumentException("Given wrong argument: " + type + ". Use GraphDataType enum.");

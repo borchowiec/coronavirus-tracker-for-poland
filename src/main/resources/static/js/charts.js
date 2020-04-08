@@ -268,6 +268,62 @@ function createDailyRecoveriesGraph() {
         });
 }
 
+function createActiveCasesGraph() {
+    const graphId = "#active-cases-graph";
+    const sectionId = "#active-cases-section";
+
+    // getting data from api
+    axios.get('/api/active_cases')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 2.5
+                },
+                series:[{
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Liczba aktywnych przypadków',
+                    trendlines: [{
+                        visibility: "visible",
+                        type: "polynomial",
+                        forwardForecast: 7,
+                        polynomialOrder: 6,
+                        name: 'Prognoza',
+                        fill: '#1a4fc0'
+                    }],
+                    type: "line",
+                    width: 0,
+                    enableAnimation: true,
+                    marker: {
+                        shape: 'circle',
+                        size: {
+                            height: 10, width: 10
+                        },
+                        visible: true
+                    },
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+
+            // link forecast buttons to chart
+            linkButtonsToChart(sectionId, graphId);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 /**
  * Repaints graphs. Can be used e.g. after resizing window.
  */
@@ -277,6 +333,7 @@ function repaintGraphs() {
     $("#daily-deaths-graph").ejChart("instance").redraw();
     $("#daily-confirmed-graph").ejChart("instance").redraw();
     $("#daily-recoveries-graph").ejChart("instance").redraw();
+    $("#active-cases-graph").ejChart("instance").redraw();
 }
 
 /**
@@ -289,6 +346,7 @@ $(window).on('load', function(event) {
         createDailyDeathsGraph();
         createDailyConfirmedGraph();
         createDailyRecoveriesGraph();
+        createActiveCasesGraph();
     });
 });
 

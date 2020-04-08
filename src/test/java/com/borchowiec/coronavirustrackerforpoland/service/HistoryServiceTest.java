@@ -32,9 +32,9 @@ class HistoryServiceTest {
 
     public static List<History> getHistoryListExample() {
         return Stream.of(new History(LocalDate.parse("2020-03-28"), 200, 200, 10,
-                        10, 100, 100),
+                        10, 100, 100, 90),
                 new History(LocalDate.parse("2020-03-29"), 210, 10, 11, 1,
-                        110, 10)).collect(Collectors.toList());
+                        110, 10, 130)).collect(Collectors.toList());
     }
 
     @Test
@@ -42,7 +42,7 @@ class HistoryServiceTest {
         // given
         List<History> historyList = new LinkedList<>();
         historyList.add(new History(LocalDate.now(), 100, 2, 10, 1,
-                20, 3));
+                20, 3, 23));
         HistoryService historyService = new HistoryService();
         historyService.setHistoryList(historyList);
         Optional<List<History>> expected = Optional.of(historyList);
@@ -72,7 +72,7 @@ class HistoryServiceTest {
         // given
         List<History> oldHistoryList = new LinkedList<>();
         oldHistoryList.add(new History(LocalDate.now(), 100, 2, 10, 1,
-                20, 3));
+                20, 3, 123));
 
         HistoryService historyService = new HistoryService(restTemplate);
         historyService.setHistoryList(oldHistoryList);
@@ -94,7 +94,7 @@ class HistoryServiceTest {
         // given
         List<History> historyList = new LinkedList<>();
         historyList.add(new History(LocalDate.now(), 100, 2, 10, 1,
-                20, 3));
+                20, 3, 123));
 
         HistoryService historyService = spy(new HistoryService(restTemplate));
         Optional<List<History>> expected = Optional.of(historyList);
@@ -152,11 +152,11 @@ class HistoryServiceTest {
         // then
         List<History> expected = Stream.of(
                 new History(LocalDate.of(2020, 3, 16),
-                        100, 100, 3, 3, 1, 1),
+                        100, 100, 3, 3, 1, 1, 96),
                 new History(LocalDate.of(2020, 3, 17),
-                        120, 20, 9, 6, 2, 1),
+                        120, 20, 9, 6, 2, 1, 109),
                 new History(LocalDate.of(2020, 3, 18),
-                        140, 20, 12, 3, 3, 1)
+                        140, 20, 12, 3, 3, 1, 125)
         ).collect(Collectors.toList());
         assertEquals(expected, actual);
     }
@@ -215,7 +215,7 @@ class HistoryServiceTest {
         // then
         List<History> expected = Stream.of(
                 new History(LocalDate.of(2020, 3, 19),
-                        140, 140, 12, 12, 1, 1)
+                        140, 140, 12, 12, 1, 1, 127)
         ).collect(Collectors.toList());
         assertEquals(expected, actual);
     }
@@ -331,6 +331,24 @@ class HistoryServiceTest {
         // then
         List<GraphDataResponse> expected = historyList.stream()
                 .map(history -> new GraphDataResponse(history.getNewRecovered(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void getGraphData_givenActiveCases_shouldReturnActiveCasesData() {
+        // given
+        GraphDataType argument = GraphDataType.ACTIVE_CASES;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getActiveCases(), history.getDate()))
                 .collect(Collectors.toList());
         assertEquals(actual, expected);
     }
