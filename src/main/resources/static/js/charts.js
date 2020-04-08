@@ -57,6 +57,7 @@ function createConfirmedGraph() {
                     tooltip: {
                         visible: true
                     },
+                    fill: "#ff781e",
                     name: 'Liczba zarażeń',
                     trendlines: [{
                         visibility: "visible",
@@ -70,6 +71,7 @@ function createConfirmedGraph() {
                     width: 0,
                     enableAnimation: true,
                     marker: {
+                        border: {width: 0},
                         shape: 'circle',
                         size: {
                             height: 10, width: 10
@@ -130,6 +132,184 @@ function createDeathsGraph() {
                     enableAnimation: true,
                     marker: {
                         shape: 'circle',
+                        border: {width: 0},
+                        size: {
+                            height: 10, width: 10
+                        },
+                        visible: true
+                    },
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+
+            // link forecast buttons to chart
+            linkButtonsToChart(sectionId, graphId);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createDailyDeathsGraph() {
+    const graphId = "#daily-deaths-graph";
+
+    // getting data from api
+    axios.get('/api/new_deaths')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba zgonów',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createDailyConfirmedGraph() {
+    const graphId = "#daily-confirmed-graph";
+
+    // getting data from api
+    axios.get('/api/new_confirmed')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    fill: "#ff781e",
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba potwierdzonych przypadków',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createDailyRecoveriesGraph() {
+    const graphId = "#daily-recoveries-graph";
+
+    // getting data from api
+    axios.get('/api/new_recoveries')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    fill: "#41e540",
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba wyzdrowień',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createActiveCasesGraph() {
+    const graphId = "#active-cases-graph";
+    const sectionId = "#active-cases-section";
+
+    // getting data from api
+    axios.get('/api/active_cases')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 2.5
+                },
+                series:[{
+                    tooltip: {
+                        visible: true
+                    },
+                    fill: "#735cff",
+                    name: 'Liczba aktywnych przypadków',
+                    trendlines: [{
+                        visibility: "visible",
+                        type: "polynomial",
+                        forwardForecast: 7,
+                        polynomialOrder: 6,
+                        name: 'Prognoza',
+                        fill: '#1a4fc0'
+                    }],
+                    type: "line",
+                    width: 0,
+                    enableAnimation: true,
+                    marker: {
+                        shape: 'circle',
+                        border: {width: 0},
                         size: {
                             height: 10, width: 10
                         },
@@ -155,6 +335,10 @@ function createDeathsGraph() {
 function repaintGraphs() {
     $("#confirmed-graph").ejChart("instance").redraw();
     $("#deaths-graph").ejChart("instance").redraw();
+    $("#daily-deaths-graph").ejChart("instance").redraw();
+    $("#daily-confirmed-graph").ejChart("instance").redraw();
+    $("#daily-recoveries-graph").ejChart("instance").redraw();
+    $("#active-cases-graph").ejChart("instance").redraw();
 }
 
 /**
@@ -164,6 +348,10 @@ $(window).on('load', function(event) {
     $(function () {
         createConfirmedGraph();
         createDeathsGraph();
+        createDailyDeathsGraph();
+        createDailyConfirmedGraph();
+        createDailyRecoveriesGraph();
+        createActiveCasesGraph();
     });
 });
 
