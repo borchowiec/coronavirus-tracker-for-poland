@@ -145,6 +145,10 @@ public class HistoryService {
                 return allData.stream()
                         .map(history -> new GraphDataResponse(history.getNewRecovered(), history.getDate()))
                         .collect(Collectors.toList());
+            case ACTIVE_CASES:
+                return allData.stream()
+                        .map(history -> new GraphDataResponse(history.getActiveCases(), history.getDate()))
+                        .collect(Collectors.toList());
             default:
                 throw new IllegalArgumentException("Given wrong argument: " + type + ". Use GraphDataType enum.");
         }

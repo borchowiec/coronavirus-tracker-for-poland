@@ -334,4 +334,22 @@ class HistoryServiceTest {
                 .collect(Collectors.toList());
         assertEquals(actual, expected);
     }
+
+    @Test
+    void getGraphData_givenActiveCases_shouldReturnActiveCasesData() {
+        // given
+        GraphDataType argument = GraphDataType.ACTIVE_CASES;
+        List<History> historyList = getHistoryListExample();
+
+        // when
+        HistoryService historyService = new HistoryService();
+        historyService.setHistoryList(historyList);
+        List<GraphDataResponse> actual = historyService.getGraphData(argument);
+
+        // then
+        List<GraphDataResponse> expected = historyList.stream()
+                .map(history -> new GraphDataResponse(history.getActiveCases(), history.getDate()))
+                .collect(Collectors.toList());
+        assertEquals(actual, expected);
+    }
 }
