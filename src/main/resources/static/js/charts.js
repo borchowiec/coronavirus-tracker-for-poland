@@ -149,12 +149,134 @@ function createDeathsGraph() {
         });
 }
 
+function createDailyDeathsGraph() {
+    const graphId = "#daily-deaths-graph";
+
+    // getting data from api
+    axios.get('/api/new_deaths')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba zgonów',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createDailyConfirmedGraph() {
+    const graphId = "#daily-confirmed-graph";
+
+    // getting data from api
+    axios.get('/api/new_confirmed')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    fill: "#ff781e",
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba potwierdzonych przypadków',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function createDailyRecoveriesGraph() {
+    const graphId = "#daily-recoveries-graph";
+
+    // getting data from api
+    axios.get('/api/new_recoveries')
+        .then(function (response) {
+            // mapping data. Converting string to Date
+            const data = response.data.map(el => {return {value: el.value, date: new Date(el.date)}});
+
+            // creates graph
+            $(graphId).ejChart({
+                primaryXAxis: {
+                    alignment: "center",
+                    labelIntersectAction : 'hide',
+                    labelFormat: 'dd/MM/yy',
+                    labelRotation: 45,
+                    maximumLabels: 10
+                },
+                series:[{
+                    fill: "#41e540",
+                    highlightSettings: {
+                        enable: true,
+                        mode: 'point'
+                    },
+                    tooltip: {
+                        visible: true
+                    },
+                    name: 'Dzienna liczba wyzdrowień',
+                    enableAnimation: true,
+                    dataSource: data,
+                    xName: "date",
+                    yName: "value"
+                }]
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 /**
  * Repaints graphs. Can be used e.g. after resizing window.
  */
 function repaintGraphs() {
     $("#confirmed-graph").ejChart("instance").redraw();
     $("#deaths-graph").ejChart("instance").redraw();
+    $("#daily-deaths-graph").ejChart("instance").redraw();
+    $("#daily-confirmed-graph").ejChart("instance").redraw();
+    $("#daily-recoveries-graph").ejChart("instance").redraw();
 }
 
 /**
@@ -164,6 +286,9 @@ $(window).on('load', function(event) {
     $(function () {
         createConfirmedGraph();
         createDeathsGraph();
+        createDailyDeathsGraph();
+        createDailyConfirmedGraph();
+        createDailyRecoveriesGraph();
     });
 });
 
