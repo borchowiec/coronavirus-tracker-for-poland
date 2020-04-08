@@ -80,6 +80,7 @@ public class HistoryService {
                 history.setConfirmed(node.get("confirmed").asInt());
                 history.setDeaths(node.get("deaths").asInt());
                 history.setRecovered(node.get("recovered").asInt());
+                history.setActiveCases(history.getConfirmed() - history.getDeaths() - history.getRecovered());
                 result.add(history);
             }
         });

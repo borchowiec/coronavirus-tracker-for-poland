@@ -11,11 +11,12 @@ public class History {
     private int newDeaths;
     private int recovered;
     private int newRecovered;
+    private int activeCases;
 
     public History() {
     }
 
-    public History(LocalDate date, int confirmed, int newConfirmed, int deaths, int newDeaths, int recovered, int newRecovered) {
+    public History(LocalDate date, int confirmed, int newConfirmed, int deaths, int newDeaths, int recovered, int newRecovered, int activeCases) {
         this.date = date;
         this.confirmed = confirmed;
         this.newConfirmed = newConfirmed;
@@ -23,6 +24,7 @@ public class History {
         this.newDeaths = newDeaths;
         this.recovered = recovered;
         this.newRecovered = newRecovered;
+        this.activeCases = activeCases;
     }
 
     public LocalDate getDate() {
@@ -81,6 +83,14 @@ public class History {
         this.newRecovered = newRecovered;
     }
 
+    public int getActiveCases() {
+        return activeCases;
+    }
+
+    public void setActiveCases(int activeCases) {
+        this.activeCases = activeCases;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,12 +102,13 @@ public class History {
                 newDeaths == history.newDeaths &&
                 recovered == history.recovered &&
                 newRecovered == history.newRecovered &&
+                activeCases == history.activeCases &&
                 Objects.equals(date, history.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, confirmed, newConfirmed, deaths, newDeaths, recovered, newRecovered);
+        return Objects.hash(date, confirmed, newConfirmed, deaths, newDeaths, recovered, newRecovered, activeCases);
     }
 
     @Override
@@ -110,6 +121,7 @@ public class History {
                 ", newDeaths=" + newDeaths +
                 ", recovered=" + recovered +
                 ", newRecovered=" + newRecovered +
+                ", activeCases=" + activeCases +
                 '}';
     }
 }
