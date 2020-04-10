@@ -2,9 +2,11 @@ package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.CurrentData;
+import com.borchowiec.coronavirustrackerforpoland.model.RegionalData;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.borchowiec.coronavirustrackerforpoland.service.CurrentDataService;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
+import com.borchowiec.coronavirustrackerforpoland.service.RegionalDataService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,9 +43,12 @@ class ApiControllerTest {
     @MockBean
     private CurrentDataService currentDataService;
 
+    @MockBean
+    private RegionalDataService regionalDataService;
+
     @BeforeEach
     void buildMvc() {
-        mvc = standaloneSetup(new ApiController(historyService, currentDataService)).build();
+        mvc = standaloneSetup(new ApiController(historyService, currentDataService, regionalDataService)).build();
     }
 
     @Test
@@ -88,6 +93,34 @@ class ApiControllerTest {
         String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
         CurrentData actual = objectMapper.readValue(responseAsString, CurrentData.class);
 
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getRegionalData_dataDoesntExist_shouldReturn204() throws Exception {
+        when(regionalDataService.getRegionalData()).thenThrow(new DataNotAvailableException());
+        mvc.perform(get("/api/regional")).andDo(print()).andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getRegionalData_dataExists_shouldReturnProperPayloadAnd200() throws Exception {
+        // given
+        List<RegionalData> expected = Stream.of(
+                new RegionalData("podkarpackie", 100, 1,2),
+                new RegionalData("mazowieckie", 200, 2,3)).collect(Collectors.toList());
+
+        // when
+        when(regionalDataService.getRegionalData()).thenReturn(expected);
+        ResultActions resultActions = mvc.perform(get("/api/regional")
+                .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<RegionalData> actual = Stream
+                .of(objectMapper.readValue(responseAsString, RegionalData[].class))
+                .collect(Collectors.toList());
+
+        // then
         assertEquals(expected, actual);
     }
 }
