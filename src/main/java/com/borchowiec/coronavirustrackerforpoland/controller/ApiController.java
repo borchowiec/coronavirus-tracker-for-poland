@@ -3,12 +3,10 @@ package com.borchowiec.coronavirustrackerforpoland.controller;
 import com.borchowiec.coronavirustrackerforpoland.exception.BadRequestException;
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.CurrentData;
+import com.borchowiec.coronavirustrackerforpoland.model.News;
 import com.borchowiec.coronavirustrackerforpoland.model.RegionalData;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
-import com.borchowiec.coronavirustrackerforpoland.service.CurrentDataService;
-import com.borchowiec.coronavirustrackerforpoland.service.GraphDataType;
-import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
-import com.borchowiec.coronavirustrackerforpoland.service.RegionalDataService;
+import com.borchowiec.coronavirustrackerforpoland.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +21,13 @@ public class ApiController {
     private final HistoryService historyService;
     private final CurrentDataService currentDataService;
     private final RegionalDataService regionalDataService;
+    private final NewsService newsService;
 
-    public ApiController(HistoryService historyService, CurrentDataService currentDataService, RegionalDataService regionalDataService) {
+    public ApiController(HistoryService historyService, CurrentDataService currentDataService, RegionalDataService regionalDataService, NewsService newsService) {
         this.historyService = historyService;
         this.currentDataService = currentDataService;
         this.regionalDataService = regionalDataService;
+        this.newsService = newsService;
     }
 
     /**
@@ -78,6 +78,17 @@ public class ApiController {
         } catch (DataNotAvailableException e) {
             // if there is no data, try to update it
             regionalDataService.updateRegionalData();
+            throw e;
+        }
+    }
+
+    @GetMapping("/api/news")
+    public List<News> getNews() throws IOException {
+        try {
+            return newsService.getNews();
+        } catch (DataNotAvailableException e) {
+            // if there is no data, try to update it
+            newsService.updateNews();
             throw e;
         }
     }

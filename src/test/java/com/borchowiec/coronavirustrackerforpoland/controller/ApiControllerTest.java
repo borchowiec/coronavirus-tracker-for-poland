@@ -2,10 +2,12 @@ package com.borchowiec.coronavirustrackerforpoland.controller;
 
 import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.CurrentData;
+import com.borchowiec.coronavirustrackerforpoland.model.News;
 import com.borchowiec.coronavirustrackerforpoland.model.RegionalData;
 import com.borchowiec.coronavirustrackerforpoland.payload.GraphDataResponse;
 import com.borchowiec.coronavirustrackerforpoland.service.CurrentDataService;
 import com.borchowiec.coronavirustrackerforpoland.service.HistoryService;
+import com.borchowiec.coronavirustrackerforpoland.service.NewsService;
 import com.borchowiec.coronavirustrackerforpoland.service.RegionalDataService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,9 +48,12 @@ class ApiControllerTest {
     @MockBean
     private RegionalDataService regionalDataService;
 
+    @MockBean
+    private NewsService newsService;
+
     @BeforeEach
     void buildMvc() {
-        mvc = standaloneSetup(new ApiController(historyService, currentDataService, regionalDataService)).build();
+        mvc = standaloneSetup(new ApiController(historyService, currentDataService, regionalDataService, newsService)).build();
     }
 
     @Test
@@ -123,4 +128,33 @@ class ApiControllerTest {
         // then
         assertEquals(expected, actual);
     }
+
+    @Test
+    void getNews_dataDoesntExist_shouldReturn204() throws Exception {
+        when(newsService.getNews()).thenThrow(new DataNotAvailableException());
+        mvc.perform(get("/api/news")).andDo(print()).andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getNews_dataExists_shouldReturnProperPayloadAnd200() throws Exception {
+        // given
+        List<News> expected = Stream.of(
+                new News("title", LocalDate.of(2020, 1, 1), "url"),
+                new News("title2", LocalDate.of(2019, 2, 12), "url")
+        ).collect(Collectors.toList());
+
+        // when
+        when(newsService.getNews()).thenReturn(expected);
+        ResultActions resultActions = mvc.perform(get("/api/news"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        String responseAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<News> actual = Stream
+                .of(objectMapper.readValue(responseAsString, News[].class))
+                .collect(Collectors.toList());
+
+        // then
+        assertEquals(expected, actual);
+    }
+
 }

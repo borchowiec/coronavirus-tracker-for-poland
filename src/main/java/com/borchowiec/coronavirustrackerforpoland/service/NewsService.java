@@ -1,5 +1,6 @@
 package com.borchowiec.coronavirustrackerforpoland.service;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.News;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,10 +24,17 @@ public class NewsService {
 
     @Scheduled(fixedDelayString = "${update.regionalData.delay}")
     public void updateNews() throws IOException {
-        news = getNews();
+        news = getNewsFromDifferenPages();
     }
 
-    private List<News> getNews() throws IOException {
+    public List<News> getNews() {
+        if (news == null) {
+            throw new DataNotAvailableException();
+        }
+        return news;
+    }
+
+    private List<News> getNewsFromDifferenPages() throws IOException {
         List<News> result = new LinkedList<>();
         result.addAll(Objects.requireNonNull(getPzhNews()));
         result.addAll(Objects.requireNonNull(getGovNews()));
