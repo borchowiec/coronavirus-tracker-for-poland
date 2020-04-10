@@ -163,6 +163,19 @@ p {
     left: 10px;
 }
 
+.loading {
+  text-align: center;
+  animation-name: breathing;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes breathing {
+  0%   {opacity: 0.5;}
+  50%  {opacity: 0.2;}
+  100% {opacity: 0.5;}
+}
+
 /*===== PROJECT CSS ENDS =====*/
 
 
