@@ -19,7 +19,7 @@ public class RegionalDataService {
     private List<RegionalData> regionalData;
 
     @Scheduled(fixedDelayString = "${update.regionalData.delay}")
-    public void getRegionalData() throws IOException {
+    public void updateRegionalData() throws IOException {
         String url = "https://www.rynekzdrowia.pl/koronawirus/status?v=poziom";
         Document doc = Jsoup.connect(url).get();
 
