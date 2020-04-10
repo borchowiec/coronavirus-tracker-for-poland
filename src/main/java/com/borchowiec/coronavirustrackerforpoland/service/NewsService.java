@@ -22,9 +22,13 @@ public class NewsService {
 
     private List<News> news;
 
+    /**
+     * Updates {@link #news} every specific time.
+     * @throws IOException
+     */
     @Scheduled(fixedDelayString = "${update.regionalData.delay}")
     public void updateNews() throws IOException {
-        news = getNewsFromDifferenPages();
+        news = getNewsFromDifferentPages();
     }
 
     public List<News> getNews() {
@@ -34,7 +38,12 @@ public class NewsService {
         return news;
     }
 
-    private List<News> getNewsFromDifferenPages() throws IOException {
+    /**
+     * Takes newses from different web pages. Newses are sorted by date. The newest is first.
+     * @return Newses about coronavirus.
+     * @throws IOException
+     */
+    private List<News> getNewsFromDifferentPages() throws IOException {
         List<News> result = new LinkedList<>();
         result.addAll(Objects.requireNonNull(getPzhNews()));
         result.addAll(Objects.requireNonNull(getGovNews()));
@@ -42,6 +51,10 @@ public class NewsService {
         return result;
     }
 
+    /**
+     * @return News from gov.pl
+     * @throws IOException
+     */
     private List<News> getGovNews() throws IOException {
         String url = "https://www.gov.pl/web/koronawirus/komunikaty-resortow";
         Document doc = Jsoup.connect(url).get();
@@ -57,6 +70,10 @@ public class NewsService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @return News from pzh.gov.pl
+     * @throws IOException
+     */
     private List<News> getPzhNews() throws IOException {
         String url = "https://www.pzh.gov.pl/aktualnosci-dot-wirusa-sars-cov-2/";
         Document doc = Jsoup.connect(url).get();

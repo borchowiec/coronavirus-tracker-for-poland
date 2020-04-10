@@ -82,6 +82,10 @@ public class ApiController {
         }
     }
 
+    /**
+     * @return Newest news about coronavirus.
+     * @throws IOException
+     */
     @GetMapping("/api/news")
     public List<News> getNews() throws IOException {
         try {
