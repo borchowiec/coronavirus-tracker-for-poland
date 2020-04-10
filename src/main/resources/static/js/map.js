@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    // getting data
     axios.get(`/api/regional`)
         .then(function (response) {
             const regionalData = response.data;
@@ -7,11 +8,13 @@ $(document).ready(function(){
                 const removedDiacritics = element.region.normalize("NFD")
                     .replace(/[\u0300-\u036f]/g, "").replace("ł", "l");
 
+                // preparing label
                 let label = "<b>" + element.region.charAt(0).toUpperCase() + element.region.substring(1) + "</b>";
                 label += "<br/>";
                 label += "Potwierdzone: " + element.confirmed;
                 label += "<br/>";
                 label += "Zgony: " + element.deaths;
+
                 document.querySelector(`a[href*="#${removedDiacritics}"]`).innerHTML = label;
             });
         })

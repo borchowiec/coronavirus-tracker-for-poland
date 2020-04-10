@@ -26,6 +26,10 @@ public class RegionalDataService {
         return regionalData;
     }
 
+    /**
+     * Updates {@link #regionalData} every set time.
+     * @throws IOException
+     */
     @Scheduled(fixedDelayString = "${update.regionalData.delay}")
     public void updateRegionalData() throws IOException {
         String url = "https://www.rynekzdrowia.pl/koronawirus/status?v=poziom";
@@ -38,6 +42,12 @@ public class RegionalDataService {
         regionalData = toRegionalData(jsonData);
     }
 
+    /**
+     * Converts jsonData to list of {@link RegionalData}.
+     * @param jsonData Data that will be converted.
+     * @return List of {@link RegionalData}.
+     * @throws JsonProcessingException
+     */
     public List<RegionalData> toRegionalData(String jsonData) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(jsonData);

@@ -67,11 +67,16 @@ public class ApiController {
         return currentDataService.getCurrentData();
     }
 
+    /**
+     * @return Data containing status of every region in Poland.
+     * @throws IOException
+     */
     @GetMapping("/api/regional")
     public List<RegionalData> getRegionalData() throws IOException {
         try {
             return regionalDataService.getRegionalData();
         } catch (DataNotAvailableException e) {
+            // if there is no data, try to update it
             regionalDataService.updateRegionalData();
             throw e;
         }
