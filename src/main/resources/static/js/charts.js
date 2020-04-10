@@ -107,6 +107,9 @@ function createBasicForecastGraph(graph) {
                 }]
             });
 
+            // remove loading label
+            document.querySelector(graphId).removeChild(document.querySelector(`${graphId} .loading`))
+
             // link forecast buttons to chart
             linkButtonsToChart(sectionId, graphId);
         })
@@ -149,6 +152,9 @@ function createBasicBarGraph(graph) {
                     yName: "value"
                 }]
             });
+
+            // remove loading label
+            document.querySelector(graphId).removeChild(document.querySelector(`${graphId} .loading`))
         })
         .catch(function (error) {
             console.log(error);
