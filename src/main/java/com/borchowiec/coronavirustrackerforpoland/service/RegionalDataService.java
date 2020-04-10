@@ -1,5 +1,6 @@
 package com.borchowiec.coronavirustrackerforpoland.service;
 
+import com.borchowiec.coronavirustrackerforpoland.exception.DataNotAvailableException;
 import com.borchowiec.coronavirustrackerforpoland.model.RegionalData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +18,13 @@ import java.util.stream.StreamSupport;
 @Service
 public class RegionalDataService {
     private List<RegionalData> regionalData;
+
+    public List<RegionalData> getRegionalData() {
+        if (regionalData == null) {
+            throw new DataNotAvailableException();
+        }
+        return regionalData;
+    }
 
     @Scheduled(fixedDelayString = "${update.regionalData.delay}")
     public void updateRegionalData() throws IOException {
