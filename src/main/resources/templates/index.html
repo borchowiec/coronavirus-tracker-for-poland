@@ -18,6 +18,9 @@
 
     <!--====== Style CSS ======-->
     <link rel="stylesheet" href="css/style.css">
+
+    <!--====== CSS MAP ======-->
+    <link rel="stylesheet" type="text/css" href="cssmap-poland/cssmap-poland/cssmap-poland.css" media="screen" />
     
 </head>
 
@@ -68,6 +71,7 @@
                                 <li class="nav-item active"><a class="page-scroll" href="#deaths-section">Zgony</a></li>
                                 <li class="nav-item active"><a class="page-scroll" href="#daily-section">Statystyki Dzienne</a></li>
                                 <li class="nav-item active"><a class="page-scroll" href="#active-cases-section">Aktywne przypadki</a></li>
+                                <li class="nav-item active"><a class="page-scroll" href="#map-section">Mapa</a></li>
                             </ul>
                         </div>
                     </nav> <!-- navbar -->
@@ -242,8 +246,54 @@
     <!--====== ACTIVE CASES SECTION ENDS ======-->
 
 
+    <!--====== MAP SECTION STARTS ======-->
+
+    <section id="map-section" class="section darker-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="section-title text-center pb-10">
+                        <h3 class="title">Mapa</h3>
+                    </div> <!-- row -->
+                </div>
+            </div> <!-- row -->
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <!-- CSSMap - Poland -->
+                    <div id="map-poland">
+                        <ul class="poland">
+                            <li class="pl1"><a href="#dolnoslaskie"></a></li>
+                            <li class="pl2"><a href="#kujawsko-pomorskie"></a></li>
+                            <li class="pl3"><a href="#lubelskie"></a></li>
+                            <li class="pl4"><a href="#lubuskie"></a></li>
+                            <li class="pl5"><a href="#lodzkie"></a></li>
+                            <li class="pl6"><a href="#malopolskie"></a></li>
+                            <li class="pl7"><a href="#mazowieckie"></a></li>
+                            <li class="pl8"><a href="#opolskie"></a></li>
+                            <li class="pl9"><a href="#podkarpackie"></a></li>
+                            <li class="pl10"><a href="#podlaskie"></a></li>
+                            <li class="pl11"><a href="#pomorskie"></a></li>
+                            <li class="pl12"><a href="#slaskie"></a></li>
+                            <li class="pl13"><a href="#swietokrzyskie"></a></li>
+                            <li class="pl14"><a href="#warminsko-mazurskie"></a></li>
+                            <li class="pl15"><a href="#wielkopolskie"></a></li>
+                            <li class="pl16"><a href="#zachodniopomorskie"></a></li>
+                        </ul>
+                    </div>
+                    <!-- END OF THE CSSMap - Poland -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+
+    <!--====== MAP SECTION ENDS ======-->
+
+
     <!--====== Jquery js ======-->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
+
+    <!-- CSSMap SCRIPT -->
+    <script type="text/javascript" src="https://cssmapsplugin.com/5/jquery.cssmap.min.js"></script>
 
     <!--====== Axios js ======-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -275,9 +325,11 @@
     <!--====== Charts ======-->
     <script src="js/charts.js"></script>
 
+    <!--====== Map ======-->
+    <script src="js/map.js"></script>
+
     <!--====== Main js ======-->
     <script src="js/main.js"></script>
 
 </body>
-
 </html>
