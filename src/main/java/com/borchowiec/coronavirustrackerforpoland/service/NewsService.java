@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +82,9 @@ public class NewsService {
                     String href = anchor.attributes().get("href");
                     String title = anchor.text();
                     String stringDate = element.getElementsByClass("elementor-post-date").get(0).text();
-                    LocalDate date = LocalDate.parse(stringDate, DateTimeFormatter.ofPattern("d MMMM yyyy"));
+                    Locale locale = new Locale("pl", "PL");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", locale);
+                    LocalDate date = LocalDate.parse(stringDate, formatter);
                     return new News(title, date, href);
                 })
                 .collect(Collectors.toList());

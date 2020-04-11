@@ -9,9 +9,4 @@ import java.util.Locale;
 @Configuration
 @EnableScheduling
 public class AppConfig {
-
-    @PostConstruct
-    public void init() {
-        Locale.setDefault(new Locale("pl"));
-    }
 }
